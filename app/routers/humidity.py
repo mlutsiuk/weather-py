@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.get("/lunches")
 async def lunches_index():
-    return await lunch_utils.get_lunches()
+    return await lunch_utils.get_all()
 
 
 @router.get("/profiles/{profile_id}/lunches")
@@ -23,14 +23,14 @@ async def profile_lunches(profile_id: int):
 
 @router.post("/lunches", response_model=Location, status_code=201)
 async def lunches_store(lunch: LocationCreate):
-    lunch_id = await lunch_utils.create_lunch(lunch)
+    lunch_id = await lunch_utils.create(lunch)
 
-    return await lunch_utils.find_lunch(lunch_id)
+    return await lunch_utils.get_one(lunch_id)
 
 
 @router.get("/lunches/{lunch_id}", response_model=Location)
 async def lunches_show(lunch_id: int):
-    lunch = await lunch_utils.find_lunch(lunch_id)
+    lunch = await lunch_utils.get_one(lunch_id)
     if lunch:
         return lunch
     else:
@@ -39,10 +39,10 @@ async def lunches_show(lunch_id: int):
 
 @router.put("/lunches/{lunch_id}", response_model=Location)
 async def lunches_update(lunch_id: int, lunch_data: LocationUpdate):
-    lunch = await lunch_utils.find_lunch(lunch_id)
+    lunch = await lunch_utils.get_one(lunch_id)
     if lunch:
-        await lunch_utils.update_lunch(lunch_id, lunch_data)
-        return await lunch_utils.find_lunch(lunch_id)
+        await lunch_utils.update(lunch_id, lunch_data)
+        return await lunch_utils.get_one(lunch_id)
     else:
         raise HTTPException(status_code=404, detail="Lunch not found")
 
