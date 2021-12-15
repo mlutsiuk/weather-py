@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class TemperatureRecordCreate(BaseModel):
-    location_id: int
     date: datetime
     temperature: int
 

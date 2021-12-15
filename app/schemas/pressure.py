@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class PressureRecordCreate(BaseModel):
-    location_id: int
     date: datetime
     pressure: int
 
