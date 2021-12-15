@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.pressure_records import pressure_records_table
-from app.schemas.pressure import ProfileCreate, ProfileUpdate
+from app.schemas.pressure import PressureRecordCreate, PressureRecordUpdate
 
 
 async def get_profiles():
@@ -37,7 +37,7 @@ async def find_profile(profile_id: int):
     return await database.fetch_one(query)
 
 
-async def create_profile(profile: ProfileCreate):
+async def create_profile(profile: PressureRecordCreate):
     query = (
         pressure_records_table.insert()
             .values(
@@ -53,7 +53,7 @@ async def create_profile(profile: ProfileCreate):
     return profile_id
 
 
-async def update_profile(profile_id: int, profile: ProfileUpdate):
+async def update_profile(profile_id: int, profile: PressureRecordUpdate):
     query = (
         pressure_records_table.update()
             .where(pressure_records_table.c.id == profile_id)
