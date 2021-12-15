@@ -1,68 +1,61 @@
 from sqlalchemy import select, asc
 
 from app.models.database import database
-from app.models.humidity_records import humidity_records_table
-from app.schemas.humidity import HumidityRecordCreate, HumidityRecordUpdate
+from app.models.pressure_records import pressure_records_table
+from app.schemas.pressure import PressureRecordCreate, PressureRecordUpdate
 
 
-async def get_products():
+async def get_all_location_pressure_records(location_id: int):
     query = (
         select(
             [
-                humidity_records_table.c.id,
-                humidity_records_table.c.name,
-                humidity_records_table.c.calories,
-                humidity_records_table.c.proteins,
-                humidity_records_table.c.fats,
-                humidity_records_table.c.carbs
+                pressure_records_table.c.id,
+                pressure_records_table.c.location_id,
+                pressure_records_table.c.date,
+                pressure_records_table.c.pressure
             ]
-        ).order_by(asc(humidity_records_table.c.id))
+        ).where(pressure_records_table.c.location_id == location_id)
+        .order_by(asc(pressure_records_table.c.id))
     )
     return await database.fetch_all(query)
 
 
-async def find_product(product_id: int):
+async def get_one(pressure_record_id: int):
     query = (
         select(
             [
-                humidity_records_table.c.id,
-                humidity_records_table.c.name,
-                humidity_records_table.c.calories,
-                humidity_records_table.c.proteins,
-                humidity_records_table.c.fats,
-                humidity_records_table.c.carbs
+                pressure_records_table.c.id,
+                pressure_records_table.c.location_id,
+                pressure_records_table.c.date,
+                pressure_records_table.c.pressure
             ]
-        ).where(humidity_records_table.c.id == product_id)
+        ).where(pressure_records_table.c.id == pressure_record_id)
     )
     return await database.fetch_one(query)
 
 
-async def create_product(product: HumidityRecordCreate):
+async def create(location_id: int, pressure_record: PressureRecordCreate):
     query = (
-        humidity_records_table.insert()
-            .values(
-            name=product.name,
-            calories=product.calories,
-            proteins=product.proteins,
-            fats=product.fats,
-            carbs=product.carbs
+        pressure_records_table.insert()
+        .values(
+            location_id=location_id,
+            date=pressure_record.date,
+            pressure=pressure_record.pressure
         )
     )
 
-    product_id = await database.execute(query)
-    return product_id
+    pressure_record_id = await database.execute(query)
+    return pressure_record_id
 
 
-async def update_product(product_id: int, product: HumidityRecordUpdate):
+async def update(pressure_record_id: int, pressure_record: PressureRecordUpdate):
     query = (
-        humidity_records_table.update()
-            .where(humidity_records_table.c.id == product_id)
-            .values(
-            name=product.name,
-            calories=product.calories,
-            proteins=product.proteins,
-            fats=product.fats,
-            carbs=product.carbs
+        pressure_records_table.update()
+        .where(pressure_records_table.c.id == pressure_record_id)
+        .values(
+            location_id=pressure_record.location_id,
+            date=pressure_record.date,
+            pressure=pressure_record.pressure
         )
     )
     return await database.execute(query)

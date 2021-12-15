@@ -1,43 +1,42 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.humidity import HumidityRecord, HumidityRecordCreate, HumidityRecordUpdate
-from app.utils import pressure as product_utils
+from app.schemas.pressure import PressureRecord, PressureRecordCreate, PressureRecordUpdate
+from app.utils import pressure as pressure_utils
+from app.utils import location as location_utils
 
 router = APIRouter()
 
 
-@router.get("/products")
-async def products_index():
-    return await product_utils.get_products()
-    # return {"message": "products:index"}
-
-
-@router.post("/products", response_model=HumidityRecord, status_code=201)
-async def products_store(product: HumidityRecordCreate):
-    product_id = await product_utils.create_product(product)
-
-    return await product_utils.find_product(product_id)
-
-
-@router.get("/products/{product_id}", response_model=HumidityRecord)
-async def products_show(product_id: int):
-    product = await product_utils.find_product(product_id)
-    if product:
-        return product
+@router.get("/locations/{location_id}/pressure-records")
+async def location_pressure_records_index(location_id: int):
+    location = await location_utils.get_one(location_id)
+    if location:
+        return await pressure_utils.get_all_location_pressure_records(location_id)
     else:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail="Location not found")
 
 
-@router.put("/products/{product_id}", response_model=HumidityRecord)
-async def products_update(product_id: int, product_data: HumidityRecordUpdate):
-    product = await product_utils.find_product(product_id)
-    if product:
-        await product_utils.update_product(product_id, product_data)
-        return await product_utils.find_product(product_id)
+@router.post("/locations/{location_id}/pressure-records", response_model=PressureRecord, status_code=201)
+async def pressure_records_store(location_id: int, pressure_record: PressureRecordCreate):
+    pressure_record_id = await pressure_utils.create(location_id, pressure_record)
+
+    return await location_utils.get_one(pressure_record_id)
+
+
+@router.get("/pressure-records/{pressure_record_id}", response_model=PressureRecord)
+async def pressure_records_show(pressure_record_id: int):
+    pressure_record = await pressure_utils.get_one(pressure_record_id)
+    if pressure_record:
+        return pressure_record
     else:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail="Pressure record not found")
 
 
-@router.delete("/products/{product_id}")
-async def products_destroy(product_id: int):
-    await product_utils.destroy(product_id)
+@router.put("/pressure-records/{pressure_record_id}", response_model=PressureRecord)
+async def pressure_records_update(pressure_record_id: int, data: PressureRecordUpdate):
+    pressure_record = await pressure_utils.get_one(pressure_record_id)
+    if pressure_record:
+        await pressure_utils.update(pressure_record_id, data)
+        return await pressure_utils.get_one(pressure_record_id)
+    else:
+        raise HTTPException(status_code=404, detail="Pressure record not found")
