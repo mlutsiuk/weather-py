@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.humidity import ProductModel, ProductCreate, ProductUpdate
+from app.schemas.humidity import HumidityRecord, HumidityRecordCreate, HumidityRecordUpdate
 from app.utils import pressure as product_utils
 
 router = APIRouter()
@@ -12,14 +12,14 @@ async def products_index():
     # return {"message": "products:index"}
 
 
-@router.post("/products", response_model=ProductModel, status_code=201)
-async def products_store(product: ProductCreate):
+@router.post("/products", response_model=HumidityRecord, status_code=201)
+async def products_store(product: HumidityRecordCreate):
     product_id = await product_utils.create_product(product)
 
     return await product_utils.find_product(product_id)
 
 
-@router.get("/products/{product_id}", response_model=ProductModel)
+@router.get("/products/{product_id}", response_model=HumidityRecord)
 async def products_show(product_id: int):
     product = await product_utils.find_product(product_id)
     if product:
@@ -28,8 +28,8 @@ async def products_show(product_id: int):
         raise HTTPException(status_code=404, detail="Product not found")
 
 
-@router.put("/products/{product_id}", response_model=ProductModel)
-async def products_update(product_id: int, product_data: ProductUpdate):
+@router.put("/products/{product_id}", response_model=HumidityRecord)
+async def products_update(product_id: int, product_data: HumidityRecordUpdate):
     product = await product_utils.find_product(product_id)
     if product:
         await product_utils.update_product(product_id, product_data)

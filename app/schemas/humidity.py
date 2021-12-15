@@ -1,26 +1,22 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
-class ProductCreate(BaseModel):
-    name: str
-    calories: int
-    proteins: int
-    fats: int
-    carbs: int
+class HumidityRecordCreate(BaseModel):
+    location_id: int
+    date: datetime
+    humidity: int
 
 
-class ProductUpdate(BaseModel):
-    name: str
-    calories: int
-    proteins: int
-    fats: int
-    carbs: int
+class HumidityRecordUpdate(BaseModel):
+    location_id: int
+    date: datetime
+    humidity: int
 
 
-class ProductModel(BaseModel):
+class HumidityRecord(BaseModel):
     id: int
-    name: str
-    calories: int
-    proteins: int
-    fats: int
-    carbs: int
+    location_id: int
+    date: datetime
+    humidity: int

@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.humidity_records import humidity_records_table
-from app.schemas.humidity import ProductCreate, ProductUpdate
+from app.schemas.humidity import HumidityRecordCreate, HumidityRecordUpdate
 
 
 async def get_products():
@@ -37,7 +37,7 @@ async def find_product(product_id: int):
     return await database.fetch_one(query)
 
 
-async def create_product(product: ProductCreate):
+async def create_product(product: HumidityRecordCreate):
     query = (
         humidity_records_table.insert()
             .values(
@@ -53,7 +53,7 @@ async def create_product(product: ProductCreate):
     return product_id
 
 
-async def update_product(product_id: int, product: ProductUpdate):
+async def update_product(product_id: int, product: HumidityRecordUpdate):
     query = (
         humidity_records_table.update()
             .where(humidity_records_table.c.id == product_id)
