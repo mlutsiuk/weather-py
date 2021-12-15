@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.profile import LunchModel, LunchCreate, LunchUpdate
+from app.schemas.location import Location, LocationCreate, LocationUpdate
 from app.utils import location as lunch_utils
 from app.utils import temperature as profile_utils
 
@@ -21,14 +21,14 @@ async def profile_lunches(profile_id: int):
         raise HTTPException(status_code=404, detail="Profile not found")
 
 
-@router.post("/lunches", response_model=LunchModel, status_code=201)
-async def lunches_store(lunch: LunchCreate):
+@router.post("/lunches", response_model=Location, status_code=201)
+async def lunches_store(lunch: LocationCreate):
     lunch_id = await lunch_utils.create_lunch(lunch)
 
     return await lunch_utils.find_lunch(lunch_id)
 
 
-@router.get("/lunches/{lunch_id}", response_model=LunchModel)
+@router.get("/lunches/{lunch_id}", response_model=Location)
 async def lunches_show(lunch_id: int):
     lunch = await lunch_utils.find_lunch(lunch_id)
     if lunch:
@@ -37,8 +37,8 @@ async def lunches_show(lunch_id: int):
         raise HTTPException(status_code=404, detail="Lunch not found")
 
 
-@router.put("/lunches/{lunch_id}", response_model=LunchModel)
-async def lunches_update(lunch_id: int, lunch_data: LunchUpdate):
+@router.put("/lunches/{lunch_id}", response_model=Location)
+async def lunches_update(lunch_id: int, lunch_data: LocationUpdate):
     lunch = await lunch_utils.find_lunch(lunch_id)
     if lunch:
         await lunch_utils.update_lunch(lunch_id, lunch_data)

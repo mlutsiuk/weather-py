@@ -4,7 +4,7 @@ from sqlalchemy import func
 from app.models.database import database
 from app.models.locations import locations_table
 from app.models.humidity_records import humidity_records_table
-from app.schemas.profile import LunchCreate, LunchUpdate
+from app.schemas.location import LocationCreate, LocationUpdate
 
 
 async def get_lunches():
@@ -71,7 +71,7 @@ async def find_lunch(lunch_id: int):
     return await database.fetch_one(query)
 
 
-async def create_lunch(lunch: LunchCreate):
+async def create_lunch(lunch: LocationCreate):
     query = (
         locations_table.insert()
             .values(
@@ -86,7 +86,7 @@ async def create_lunch(lunch: LunchCreate):
     return lunch_id
 
 
-async def update_lunch(lunch_id: int, lunch: LunchUpdate):
+async def update_lunch(lunch_id: int, lunch: LocationUpdate):
     query = (
         locations_table.update()
             .where(locations_table.c.id == lunch_id)
