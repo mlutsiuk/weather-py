@@ -25,10 +25,9 @@ async def get_one(humidity_record_id: int):
         select(
             [
                 humidity_records_table.c.id,
-                humidity_records_table.c.profile_id,
+                humidity_records_table.c.location_id,
                 humidity_records_table.c.date,
-                humidity_records_table.c.height,
-                humidity_records_table.c.weight
+                humidity_records_table.c.humidity
             ]
         ).where(humidity_records_table.c.id == humidity_record_id)
     )

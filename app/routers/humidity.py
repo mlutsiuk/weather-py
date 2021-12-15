@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.location import Location, LocationCreate, LocationUpdate
 from app.schemas.humidity import HumidityRecord, HumidityRecordCreate, HumidityRecordUpdate
-from app.utils import location as location_utils
 from app.utils import humidity as humidity_utils
+from app.utils import location as location_utils
 
 router = APIRouter()
 
