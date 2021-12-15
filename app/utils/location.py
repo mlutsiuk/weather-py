@@ -36,7 +36,7 @@ async def get_one(location_id: int):
 async def create(location: LocationCreate):
     query = (
         locations_table.insert()
-            .values(
+        .values(
             title=location.title,
             longitude=location.longitude,
             latitude=location.latitude
@@ -50,8 +50,8 @@ async def create(location: LocationCreate):
 async def update(location_id: int, location: LocationUpdate):
     query = (
         locations_table.update()
-            .where(locations_table.c.id == location_id)
-            .values(
+        .where(locations_table.c.id == location_id)
+        .values(
             title=location.title,
             longitude=location.longitude,
             latitude=location.latitude
