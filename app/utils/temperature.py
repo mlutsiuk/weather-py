@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.pressure_records import pressure_records_table
-from app.schemas.profiles import ProfileCreate, ProfileUpdate
+from app.schemas.pressure import ProfileCreate, ProfileUpdate
 
 
 async def get_profiles():

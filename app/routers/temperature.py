@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.profiles import ProfileModel, ProfileCreate, ProfileUpdate
-from app.utils import profiles as profile_utils
+from app.schemas.pressure import ProfileModel, ProfileCreate, ProfileUpdate
+from app.utils import temperature as profile_utils
 
 router = APIRouter()
 

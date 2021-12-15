@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.humidity_records import humidity_records_table
-from app.schemas.products import ProductCreate, ProductUpdate
+from app.schemas.humidity import ProductCreate, ProductUpdate
 
 
 async def get_products():

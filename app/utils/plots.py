@@ -2,8 +2,8 @@ import io
 
 from starlette.responses import StreamingResponse
 
-from app.utils import measures as measure_utils
-from app.utils import lunches as lunch_utils
+from app.utils import humidity as measure_utils
+from app.utils import location as lunch_utils
 import matplotlib.pyplot as plt
 import numpy as np
 

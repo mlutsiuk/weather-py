@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.temperature_records import temperature_records_table
-from app.schemas.measures import MeasureCreate, MeasureUpdate
+from app.schemas.temperature import MeasureCreate, MeasureUpdate
 
 
 async def get_measures():

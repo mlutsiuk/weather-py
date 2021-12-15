@@ -4,7 +4,7 @@ from sqlalchemy import func
 from app.models.database import database
 from app.models.locations import locations_table
 from app.models.humidity_records import humidity_records_table
-from app.schemas.lunches import LunchCreate, LunchUpdate
+from app.schemas.profile import LunchCreate, LunchUpdate
 
 
 async def get_lunches():

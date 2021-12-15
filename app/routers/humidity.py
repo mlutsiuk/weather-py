@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.lunches import LunchModel, LunchCreate, LunchUpdate
-from app.utils import lunches as lunch_utils
-from app.utils import profiles as profile_utils
+from app.schemas.profile import LunchModel, LunchCreate, LunchUpdate
+from app.utils import location as lunch_utils
+from app.utils import temperature as profile_utils
 
 router = APIRouter()
 

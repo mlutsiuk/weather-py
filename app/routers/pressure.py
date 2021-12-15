@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.products import ProductModel, ProductCreate, ProductUpdate
-from app.utils import products as product_utils
+from app.schemas.humidity import ProductModel, ProductCreate, ProductUpdate
+from app.utils import pressure as product_utils
 
 router = APIRouter()
 
