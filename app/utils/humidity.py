@@ -2,7 +2,7 @@ from sqlalchemy import select, asc
 
 from app.models.database import database
 from app.models.temperature_records import temperature_records_table
-from app.schemas.temperature import MeasureCreate, MeasureUpdate
+from app.schemas.temperature import TemperatureRecordCreate, TemperatureRecordUpdate
 
 
 async def get_measures():
@@ -51,7 +51,7 @@ async def find_measure(measure_id: int):
     return await database.fetch_one(query)
 
 
-async def create_measure(measure: MeasureCreate):
+async def create_measure(measure: TemperatureRecordCreate):
     query = (
         temperature_records_table.insert()
             .values(
@@ -66,7 +66,7 @@ async def create_measure(measure: MeasureCreate):
     return measure_id
 
 
-async def update_measure(measure_id: int, measure: MeasureUpdate):
+async def update_measure(measure_id: int, measure: TemperatureRecordUpdate):
     query = (
         temperature_records_table.update()
             .where(temperature_records_table.c.id == measure_id)

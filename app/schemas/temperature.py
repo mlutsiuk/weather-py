@@ -3,23 +3,20 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class MeasureCreate(BaseModel):
-    profile_id: int
+class TemperatureRecordCreate(BaseModel):
+    location_id: int
     date: datetime
-    weight: float
-    height: int
+    temperature: int
 
 
-class MeasureUpdate(BaseModel):
-    profile_id: int
+class TemperatureRecordUpdate(BaseModel):
+    location_id: int
     date: datetime
-    weight: float
-    height: int
+    temperature: int
 
 
-class MeasureModel(BaseModel):
+class TemperatureRecord(BaseModel):
     id: int
-    profile_id: int
+    location_id: int
     date: datetime
-    weight: float
-    height: int
+    temperature: int
