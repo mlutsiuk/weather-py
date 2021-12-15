@@ -29,8 +29,8 @@ async def locations_show(location_id: int):
 
 @router.put("/locations/{location_id}", response_model=Location)
 async def locations_update(location_id: int, data: LocationUpdate):
-    measure = await location_utils.get_one(location_id)
-    if measure:
+    location = await location_utils.get_one(location_id)
+    if location:
         await location_utils.update(location_id, data)
         return await location_utils.get_one(location_id)
     else:
