@@ -24,8 +24,8 @@ async def humidity_records_store(location_id: int, humidity_record: HumidityReco
 
 
 @router.get("/humidity-records/{humidity_record_id}", response_model=HumidityRecord)
-async def lunches_show(humidity_record_id: int):
-    humidity_record = await location_utils.get_one(humidity_record_id)
+async def humidity_records_show(humidity_record_id: int):
+    humidity_record = await humidity_utils.get_one(humidity_record_id)
     if humidity_record:
         return humidity_record
     else:
@@ -33,10 +33,10 @@ async def lunches_show(humidity_record_id: int):
 
 
 @router.put("/humidity-records/{humidity_record_id}", response_model=HumidityRecord)
-async def humidity_records_update(humidity_record_id: int, humidity_record: HumidityRecordUpdate):
+async def humidity_records_update(humidity_record_id: int, data: HumidityRecordUpdate):
     humidity_record = await humidity_utils.get_one(humidity_record_id)
     if humidity_record:
-        await humidity_utils.update(humidity_record_id, humidity_record)
+        await humidity_utils.update(humidity_record_id, data)
         return await humidity_utils.get_one(humidity_record_id)
     else:
         raise HTTPException(status_code=404, detail="Humidity record not found")
