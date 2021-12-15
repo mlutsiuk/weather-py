@@ -27,8 +27,8 @@ fileConfig(config.config_file_name)
 # target_metadata = mymodel.Base.metadata
 
 target_metadata = [
-    humidity_records.metadata,
     locations.metadata,
+    humidity_records.metadata,
     pressure_records.metadata,
     temperature_records.metadata
 ]
