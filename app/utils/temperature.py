@@ -1,68 +1,61 @@
 from sqlalchemy import select, asc
 
 from app.models.database import database
-from app.models.pressure_records import pressure_records_table
-from app.schemas.pressure import PressureRecordCreate, PressureRecordUpdate
+from app.models.temperature_records import temperature_records_table
+from app.schemas.temperature import TemperatureRecordCreate, TemperatureRecordUpdate
 
 
-async def get_profiles():
+async def get_all_location_temperature_records(location_id: int):
     query = (
         select(
             [
-                pressure_records_table.c.id,
-                pressure_records_table.c.name,
-                pressure_records_table.c.target_calories,
-                pressure_records_table.c.target_proteins,
-                pressure_records_table.c.target_fats,
-                pressure_records_table.c.target_carbs
+                temperature_records_table.c.id,
+                temperature_records_table.c.location_id,
+                temperature_records_table.c.date,
+                temperature_records_table.c.temperature
             ]
-        ).order_by(asc(pressure_records_table.c.id))
+        ).where(temperature_records_table.c.location_id == location_id)
+        .order_by(asc(temperature_records_table.c.id))
     )
     return await database.fetch_all(query)
 
 
-async def find_profile(profile_id: int):
+async def get_one(temperature_record_id: int):
     query = (
         select(
             [
-                pressure_records_table.c.id,
-                pressure_records_table.c.name,
-                pressure_records_table.c.target_calories,
-                pressure_records_table.c.target_proteins,
-                pressure_records_table.c.target_fats,
-                pressure_records_table.c.target_carbs
+                temperature_records_table.c.id,
+                temperature_records_table.c.location_id,
+                temperature_records_table.c.date,
+                temperature_records_table.c.temperature
             ]
-        ).where(pressure_records_table.c.id == profile_id)
+        ).where(temperature_records_table.c.id == temperature_record_id)
     )
     return await database.fetch_one(query)
 
 
-async def create_profile(profile: PressureRecordCreate):
+async def create(location_id: int, temperature_record: TemperatureRecordCreate):
     query = (
-        pressure_records_table.insert()
-            .values(
-            name=profile.name,
-            target_calories=profile.target_calories,
-            target_proteins=profile.target_proteins,
-            target_fats=profile.target_fats,
-            target_carbs=profile.target_carbs
+        temperature_records_table.insert()
+        .values(
+            location_id=location_id,
+            date=temperature_record.date,
+            temperature=temperature_record.temperature
         )
     )
 
-    profile_id = await database.execute(query)
-    return profile_id
+    temperature_record_id = await database.execute(query)
+    return temperature_record_id
 
 
-async def update_profile(profile_id: int, profile: PressureRecordUpdate):
+async def update(temperature_record_id: int, temperature_record: TemperatureRecordUpdate):
     query = (
-        pressure_records_table.update()
-            .where(pressure_records_table.c.id == profile_id)
-            .values(
-            name=profile.name,
-            target_calories=profile.target_calories,
-            target_proteins=profile.target_proteins,
-            target_fats=profile.target_fats,
-            target_carbs=profile.target_carbs
+        temperature_records_table.update()
+        .where(temperature_records_table.c.id == temperature_record_id)
+        .values(
+            location_id=temperature_record.location_id,
+            date=temperature_record.date,
+            temperature=temperature_record.temperature
         )
     )
     return await database.execute(query)

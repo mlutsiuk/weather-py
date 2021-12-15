@@ -1,43 +1,42 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.pressure import PressureRecord, PressureRecordCreate, PressureRecordUpdate
-from app.utils import temperature as profile_utils
+from app.schemas.temperature import TemperatureRecord, TemperatureRecordCreate, TemperatureRecordUpdate
+from app.utils import temperature as temperature_utils
+from app.utils import location as location_utils
 
 router = APIRouter()
 
 
-@router.get("/profiles")
-async def profiles_index():
-    return await profile_utils.get_profiles()
-    # return {"message": "profiles:index"}
-
-
-@router.post("/profiles", response_model=PressureRecord, status_code=201)
-async def profiles_store(profile: PressureRecordCreate):
-    profile_id = await profile_utils.create_profile(profile)
-
-    return await profile_utils.find_profile(profile_id)
-
-
-@router.get("/profiles/{profile_id}", response_model=PressureRecord)
-async def profiles_show(profile_id: int):
-    profile = await profile_utils.find_profile(profile_id)
-    if profile:
-        return profile
+@router.get("/locations/{location_id}/temperature-records")
+async def location_temperature_records_index(location_id: int):
+    location = await location_utils.get_one(location_id)
+    if location:
+        return await temperature_utils.get_all_location_temperature_records(location_id)
     else:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        raise HTTPException(status_code=404, detail="Location not found")
 
 
-@router.put("/profiles/{profile_id}", response_model=PressureRecord)
-async def profiles_update(profile_id: int, profile_data: PressureRecordUpdate):
-    profile = await profile_utils.find_profile(profile_id)
-    if profile:
-        await profile_utils.update_profile(profile_id, profile_data)
-        return await profile_utils.find_profile(profile_id)
+@router.post("/locations/{location_id}/temperature-records", response_model=TemperatureRecord, status_code=201)
+async def temperature_records_store(location_id: int, temperature_record: TemperatureRecordCreate):
+    temperature_record_id = await temperature_utils.create(location_id, temperature_record)
+
+    return await location_utils.get_one(temperature_record_id)
+
+
+@router.get("/temperature-records/{temperature_record_id}", response_model=TemperatureRecord)
+async def temperature_records_show(temperature_record_id: int):
+    temperature_record = await temperature_utils.get_one(temperature_record_id)
+    if temperature_record:
+        return temperature_record
     else:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        raise HTTPException(status_code=404, detail="Temperature record not found")
 
 
-@router.delete("/profiles/{profile_id}")
-async def profiles_destroy(profile_id: int):
-    return {"message": "profiles:destroy"}
+@router.put("/temperature-records/{temperature_record_id}", response_model=TemperatureRecord)
+async def temperature_records_update(temperature_record_id: int, data: TemperatureRecordUpdate):
+    temperature_record = await temperature_utils.get_one(temperature_record_id)
+    if temperature_record:
+        await temperature_utils.update(temperature_record_id, data)
+        return await temperature_utils.get_one(temperature_record_id)
+    else:
+        raise HTTPException(status_code=404, detail="Temperature record not found")
