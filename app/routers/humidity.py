@@ -1,52 +1,43 @@
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.location import Location, LocationCreate, LocationUpdate
-from app.utils import location as lunch_utils
-from app.utils import temperature as profile_utils
+from app.schemas.humidity import HumidityRecord, HumidityRecordCreate, HumidityRecordUpdate
+from app.utils import location as location_utils
+from app.utils import humidity as humidity_utils
 
 router = APIRouter()
 
 
-@router.get("/lunches")
-async def lunches_index():
-    return await lunch_utils.get_all()
-
-
-@router.get("/profiles/{profile_id}/lunches")
-async def profile_lunches(profile_id: int):
-    profile = await profile_utils.find_profile(profile_id)
-    if profile:
-        return await lunch_utils.get_profile_lunches(profile_id)
+@router.get("/locations/{location_id}/humidity-records")
+async def location_humidity_records_index(location_id: int):
+    location = await location_utils.get_one(location_id)
+    if location:
+        return await humidity_utils.get_all_location_humidity_records(location_id)
     else:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        raise HTTPException(status_code=404, detail="Location not found")
 
 
-@router.post("/lunches", response_model=Location, status_code=201)
-async def lunches_store(lunch: LocationCreate):
-    lunch_id = await lunch_utils.create(lunch)
+@router.post("/locations/{location_id}/humidity-records", response_model=HumidityRecord, status_code=201)
+async def humidity_records_store(location_id: int, humidity_record: HumidityRecordCreate):
+    humidity_record_id = await humidity_utils.create(location_id, humidity_record)
 
-    return await lunch_utils.get_one(lunch_id)
+    return await location_utils.get_one(humidity_record_id)
 
 
-@router.get("/lunches/{lunch_id}", response_model=Location)
-async def lunches_show(lunch_id: int):
-    lunch = await lunch_utils.get_one(lunch_id)
-    if lunch:
-        return lunch
+@router.get("/humidity-records/{humidity_record_id}", response_model=HumidityRecord)
+async def lunches_show(humidity_record_id: int):
+    humidity_record = await location_utils.get_one(humidity_record_id)
+    if humidity_record:
+        return humidity_record
     else:
-        raise HTTPException(status_code=404, detail="Lunch not found")
+        raise HTTPException(status_code=404, detail="Humidity record not found")
 
 
-@router.put("/lunches/{lunch_id}", response_model=Location)
-async def lunches_update(lunch_id: int, lunch_data: LocationUpdate):
-    lunch = await lunch_utils.get_one(lunch_id)
-    if lunch:
-        await lunch_utils.update(lunch_id, lunch_data)
-        return await lunch_utils.get_one(lunch_id)
+@router.put("/humidity-records/{humidity_record_id}", response_model=HumidityRecord)
+async def humidity_records_update(humidity_record_id: int, humidity_record: HumidityRecordUpdate):
+    humidity_record = await humidity_utils.get_one(humidity_record_id)
+    if humidity_record:
+        await humidity_utils.update(humidity_record_id, humidity_record)
+        return await humidity_utils.get_one(humidity_record_id)
     else:
-        raise HTTPException(status_code=404, detail="Lunch not found")
-
-
-@router.delete("/lunches/{lunch_id}")
-async def lunches_destroy(lunch_id: int):
-    return {"message": "lunches:destroy"}
+        raise HTTPException(status_code=404, detail="Humidity record not found")

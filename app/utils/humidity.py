@@ -1,80 +1,62 @@
 from sqlalchemy import select, asc
 
 from app.models.database import database
-from app.models.temperature_records import temperature_records_table
-from app.schemas.temperature import TemperatureRecordCreate, TemperatureRecordUpdate
+from app.models.humidity_records import humidity_records_table
+from app.schemas.humidity import HumidityRecord, HumidityRecordCreate, HumidityRecordUpdate
 
 
-async def get_measures():
+async def get_all_location_humidity_records(location_id: int):
     query = (
         select(
             [
-                temperature_records_table.c.id,
-                temperature_records_table.c.profile_id,
-                temperature_records_table.c.date,
-                temperature_records_table.c.height,
-                temperature_records_table.c.weight
+                humidity_records_table.c.id,
+                humidity_records_table.c.location_id,
+                humidity_records_table.c.date,
+                humidity_records_table.c.humidity
             ]
-        ).order_by(asc(temperature_records_table.c.id))
+        ).where(humidity_records_table.c.location_id == location_id)
+        .order_by(asc(humidity_records_table.c.id))
     )
     return await database.fetch_all(query)
 
 
-async def get_profile_measures(profile_id: int):
+async def get_one(humidity_record_id: int):
     query = (
         select(
             [
-                temperature_records_table.c.id,
-                temperature_records_table.c.profile_id,
-                temperature_records_table.c.date,
-                temperature_records_table.c.height,
-                temperature_records_table.c.weight
+                humidity_records_table.c.id,
+                humidity_records_table.c.profile_id,
+                humidity_records_table.c.date,
+                humidity_records_table.c.height,
+                humidity_records_table.c.weight
             ]
-        ).where(temperature_records_table.c.profile_id == profile_id)
-            .order_by(asc(temperature_records_table.c.id))
-    )
-    return await database.fetch_all(query)
-
-
-async def find_measure(measure_id: int):
-    query = (
-        select(
-            [
-                temperature_records_table.c.id,
-                temperature_records_table.c.profile_id,
-                temperature_records_table.c.date,
-                temperature_records_table.c.height,
-                temperature_records_table.c.weight
-            ]
-        ).where(temperature_records_table.c.id == measure_id)
+        ).where(humidity_records_table.c.id == humidity_record_id)
     )
     return await database.fetch_one(query)
 
 
-async def create_measure(measure: TemperatureRecordCreate):
+async def create(location_id: int, humidity_record: HumidityRecordCreate):
     query = (
-        temperature_records_table.insert()
-            .values(
-            profile_id=measure.profile_id,
-            date=measure.date,
-            weight=measure.weight,
-            height=measure.height
+        humidity_records_table.insert()
+        .values(
+            location_id=location_id,
+            date=humidity_record.date,
+            humidity=humidity_record.humidity
         )
     )
 
-    measure_id = await database.execute(query)
-    return measure_id
+    humidity_record_id = await database.execute(query)
+    return humidity_record_id
 
 
-async def update_measure(measure_id: int, measure: TemperatureRecordUpdate):
+async def update(humidity_record_id: int, humidity_record: HumidityRecordUpdate):
     query = (
-        temperature_records_table.update()
-            .where(temperature_records_table.c.id == measure_id)
-            .values(
-            profile_id=measure.profile_id,
-            date=measure.date,
-            height=measure.height,
-            weight=measure.weight
+        humidity_records_table.update()
+        .where(humidity_records_table.c.id == humidity_record_id)
+        .values(
+            location_id=humidity_record.location_id,
+            date=humidity_record.date,
+            humidity=humidity_record.humidity
         )
     )
     return await database.execute(query)

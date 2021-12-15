@@ -16,8 +16,8 @@ async def shutdown():
     await database.disconnect()
 
 
-app.include_router(profiles.router)
-app.include_router(products.router)
-app.include_router(measures.router)
-app.include_router(lunches.router)
+app.include_router(temperature.router)
+app.include_router(pressure.router)
+app.include_router(locations.router)
+app.include_router(humidity.router)
 app.include_router(plots.router)

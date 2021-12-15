@@ -9,7 +9,7 @@ import numpy as np
 
 
 async def profile_heights(profile_id: int):
-    profile_measures = await measure_utils.get_profile_measures(profile_id)
+    profile_measures = await measure_utils.get_all_location_humidity_records(profile_id)
 
     dates = list(map(lambda m: m.date, profile_measures))
     heights = list(map(lambda m: m.height, profile_measures))
@@ -39,7 +39,7 @@ async def profile_heights(profile_id: int):
 
 
 async def profile_weights(profile_id: int):
-    profile_measures = await measure_utils.get_profile_measures(profile_id)
+    profile_measures = await measure_utils.get_all_location_humidity_records(profile_id)
 
     dates = list(map(lambda m: m.date, profile_measures))
     weights = list(map(lambda m: m.weight, profile_measures))

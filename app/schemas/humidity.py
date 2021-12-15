@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class HumidityRecordCreate(BaseModel):
-    location_id: int
     date: datetime
     humidity: int
 
