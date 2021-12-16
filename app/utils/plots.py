@@ -2,29 +2,25 @@ import io
 
 from starlette.responses import StreamingResponse
 
-from app.utils import humidity as measure_utils
-from app.utils import location as lunch_utils
+from app.utils import temperature as temperature_utils
+from app.utils import pressure as pressure_utils
+from app.utils import humidity as humidity_utils
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-async def profile_heights(profile_id: int):
-    profile_measures = await measure_utils.get_all_location_humidity_records(profile_id)
+async def location_humidity(profile_id: int):
+    location_humidity = await humidity_utils.get_all_location_humidity_records(profile_id)
 
-    dates = list(map(lambda m: m.date, profile_measures))
-    heights = list(map(lambda m: m.height, profile_measures))
+    dates = list(map(lambda r: r.date, location_humidity))
+    humidity = list(map(lambda r: r.humidity, location_humidity))
 
     fig, ax = plt.subplots()
 
-    ax.plot(dates, heights)
-    plt.legend(["Зріст"])
+    ax.plot(dates, humidity)
+    plt.legend(["Вологість"])
 
-    min_height = np.min(heights)
-    max_height = np.max(heights)
-    mean_height = round(np.mean(heights), 1)
-
-    ax.set(xlabel='Дата', ylabel='Зріст (см)',
-           title=f'Графік зросту, Мін: {min_height}, Макс: {max_height}, Сер: {mean_height}')
+    ax.set(xlabel='Дата', ylabel='Вологість у %', title='Вологість у локації')
     plt.xticks(rotation=45, ha='right')
     fig.tight_layout()
     ax.grid()
@@ -38,23 +34,18 @@ async def profile_heights(profile_id: int):
     return StreamingResponse(io.BytesIO(plot_bytes), media_type="image/png")
 
 
-async def profile_weights(profile_id: int):
-    profile_measures = await measure_utils.get_all_location_humidity_records(profile_id)
+async def location_pressure(profile_id: int):
+    location_pressure = await pressure_utils.get_all_location_pressure_records(profile_id)
 
-    dates = list(map(lambda m: m.date, profile_measures))
-    weights = list(map(lambda m: m.weight, profile_measures))
+    dates = list(map(lambda r: r.date, location_pressure))
+    pressure = list(map(lambda r: r.pressure, location_pressure))
 
     fig, ax = plt.subplots()
 
-    ax.plot(dates, weights)
-    plt.legend(["Вага"])
+    ax.plot(dates, pressure)
+    plt.legend(["Тиск"])
 
-    min_weight = np.min(weights)
-    max_weight = np.max(weights)
-    mean_weight = round(np.mean(weights), 1)
-
-    ax.set(xlabel='Дата', ylabel='Вага (кг)',
-           title=f'Графік ваги, Мін: {min_weight}, Макс: {max_weight}, Сер: {mean_weight}')
+    ax.set(xlabel='Дата', ylabel='Тиск у Па', title='Атмосферний тиск')
     plt.xticks(rotation=45, ha='right')
     fig.tight_layout()
     ax.grid()
@@ -68,11 +59,11 @@ async def profile_weights(profile_id: int):
     return StreamingResponse(io.BytesIO(plot_bytes), media_type="image/png")
 
 
-async def profile_calories(profile_id: int):
-    plot_data = await lunch_utils.get_lunches_for_plot(profile_id)
+async def location_temperature(profile_id: int):
+    plot_data = await temperature_utils.get_all_location_temperature_records(profile_id)
 
-    dates = list(map(lambda d: d.date, plot_data))
-    calories = list(map(lambda d: d.calories, plot_data))
+    dates = list(map(lambda r: r.date, plot_data))
+    calories = list(map(lambda r: r.calories, plot_data))
 
     fig, cal = plt.subplots()
 
@@ -98,7 +89,7 @@ async def profile_calories(profile_id: int):
     return StreamingResponse(io.BytesIO(plot_bytes), media_type="image/png")
 
 
-async def profile_pcf(profile_id: int):
+async def weather_prediction(profile_id: int):
     plot_data = await lunch_utils.get_lunches_for_plot(profile_id)
 
     dates = list(map(lambda d: d.date, plot_data))
