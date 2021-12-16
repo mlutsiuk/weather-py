@@ -20,7 +20,7 @@ async def location_temperature_records_index(location_id: int):
 async def temperature_records_store(location_id: int, temperature_record: TemperatureRecordCreate):
     temperature_record_id = await temperature_utils.create(location_id, temperature_record)
 
-    return await location_utils.get_one(temperature_record_id)
+    return await temperature_utils.get_one(temperature_record_id)
 
 
 @router.get("/temperature-records/{temperature_record_id}", response_model=TemperatureRecord)

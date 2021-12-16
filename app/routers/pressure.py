@@ -20,7 +20,7 @@ async def location_pressure_records_index(location_id: int):
 async def pressure_records_store(location_id: int, pressure_record: PressureRecordCreate):
     pressure_record_id = await pressure_utils.create(location_id, pressure_record)
 
-    return await location_utils.get_one(pressure_record_id)
+    return await pressure_utils.get_one(pressure_record_id)
 
 
 @router.get("/pressure-records/{pressure_record_id}", response_model=PressureRecord)

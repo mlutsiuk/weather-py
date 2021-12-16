@@ -20,7 +20,7 @@ async def location_humidity_records_index(location_id: int):
 async def humidity_records_store(location_id: int, humidity_record: HumidityRecordCreate):
     humidity_record_id = await humidity_utils.create(location_id, humidity_record)
 
-    return await location_utils.get_one(humidity_record_id)
+    return await humidity_utils.get_one(humidity_record_id)
 
 
 @router.get("/humidity-records/{humidity_record_id}", response_model=HumidityRecord)
